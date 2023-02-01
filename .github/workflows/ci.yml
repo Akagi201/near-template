@@ -12,6 +12,7 @@ jobs:
   rust_ci:
     name: Rust CI
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
       - name: Cancel Previous Runs
