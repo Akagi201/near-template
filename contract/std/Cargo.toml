@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
 near-sdk = "4.1.1"
 near-contract-standards = "4.1.1"
+near-sdk-contract-tools = "0.7.2"

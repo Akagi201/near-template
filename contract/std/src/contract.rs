@@ -1,38 +1,68 @@
-// copy from https://github.com/near/create-near-app/blob/master/templates/contracts/rust/src/lib.rs
-// Find all our documentation at https://docs.near.org
+#![allow(unused_imports)]
 use near_sdk::{
 	borsh::{self, BorshDeserialize, BorshSerialize},
-	log, near_bindgen,
+	env, near_bindgen,
+	store::Vector,
+	BorshStorageKey, PanicOnDefault,
+};
+use near_sdk_contract_tools::{
+	event,
+	owner::{Owner, OwnerExternal},
+	standard::nep297::Event,
+	Owner,
 };
 
-// Define the default message
-const DEFAULT_MESSAGE: &str = "Hello";
+#[allow(unused)]
+#[derive(BorshStorageKey, BorshSerialize)]
+enum StorageKey {
+	History,
+}
 
-// Define the contract structure
+#[event(standard = "x-value-history", version = "1.0.0", serde = "near_sdk::serde")]
+enum ContractEvent {
+	ValueSet { old_value: u32, new_value: u32 },
+}
+
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(PanicOnDefault, BorshDeserialize, BorshSerialize, Owner)]
 pub struct Contract {
-	message: String,
+	value: u32,
+	history: Vector<u32>,
 }
 
-// Define the default, which automatically initializes the contract
-impl Default for Contract {
-	fn default() -> Self {
-		Self { message: DEFAULT_MESSAGE.to_string() }
-	}
-}
-
-// Implement the contract structure
 #[near_bindgen]
 impl Contract {
-	// Public method - returns the greeting saved, defaulting to DEFAULT_MESSAGE
-	pub fn get_greeting(&self) -> String {
-		self.message.clone()
+	#[init]
+	pub fn new() -> Self {
+		let mut contract = Self { value: 0, history: Vector::new(StorageKey::History) };
+
+		let predecessor = env::predecessor_account_id();
+		Owner::init(&mut contract, &predecessor);
+
+		contract.history.push(0);
+
+		contract
 	}
 
-	// Public method - accepts a greeting, such as "howdy", and records it
-	pub fn set_greeting(&mut self, message: String) {
-		log!("Saving greeting {}", message);
-		self.message = message;
+	pub fn set_value(&mut self, value: u32) {
+		Self::require_owner();
+
+		self.history.push(value);
+		let old_value = self.value;
+		self.value = value;
+
+		ContractEvent::ValueSet { old_value, new_value: value }.emit();
+	}
+
+	pub fn get_value(&self) -> u32 {
+		self.value
+	}
+
+	pub fn get_historical_value(&self, index: u32) -> Option<&u32> {
+		self.history.len().checked_sub(index + 1).map(|i| self.history.get(i).unwrap())
+	}
+
+	pub fn get_history_length(&self) -> u32 {
+		self.history.len()
 	}
 }
