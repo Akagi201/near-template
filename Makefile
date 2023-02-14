@@ -7,7 +7,7 @@ accounts:
 
 .PHONY: build # Build all contracts and copy wasm files to res/
 build:
-	raen build --workspace --release
+	raen build --workspace --release --standards
 	cp target/res/*.wasm res/
 
 .PHONY: deploy # Deploy all contract
