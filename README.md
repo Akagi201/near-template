@@ -9,6 +9,12 @@ NEAR Rust contract template code
 - [x] Use make to build and test.
 - [x] Support raen to build the contract.
 
+## Near Tools
+
+- [raen](https://github.com/raendev/raen)
+- [wasm-opt](http://llever.com/rustwasm-book/reference/code-size.zh.html)
+- [rustle](https://github.com/blocksecteam/rustle)
+
 ## Build
 
 Install build tool
