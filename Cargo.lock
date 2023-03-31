@@ -1146,6 +1146,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rawcon"
+version = "0.1.0"
+
+[[package]]
 name = "reed-solomon-erasure"
 version = "4.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

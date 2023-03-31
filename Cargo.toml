@@ -2,6 +2,7 @@
 members = [
     "contract/std",
     "contract/nostd",
+    "contract/raw",
 ]
 
 [profile.release]
