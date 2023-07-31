@@ -28,6 +28,10 @@ npm install --global raen-cli # alternative to npm
 raen build --workspace --release
 ```
 
+## Near docs
+
+- <https://github.com/hanakannzashi/near-course-base/>
+
 ## Refs
 
 - <https://github.com/NEARFoundation/near-smart-contract-rust-template/>
